@@ -1,17 +1,41 @@
-
-// Création de l'url pour recupérer les donnnés de l'API 
-const url = "http://localhost:3000/api/products/"
-
-const container = document.getElementById("items")
+// Récupération de toutes les données de l'API 
+const url = "http://localhost:3000/api/products"
 
 
-const getArticles = () => { 
-   fetch (url)
-  .then (function (res) {
-      return res.json ()
+// On récupère toutes les données de l'api que l'on met dans un constante products
+const products = document.getElementById("items"); 
+ const getArticles = () => { 
+  fetch(url)
+  .then (function (res) { 
+     return res.json () 
+
+  }) 
+
+  .then (function (data) { 
+    data.forEach (product =>  { 
+      console.log (data); 
+ //les photos et infos des canapés sont insérées dynamiquement dans l'HTML de la page d'accueil  
+ // Il nous manque le prix et l'Id et la console affiche plus d'élément que prévue 
+      products.innerHTML += `<a href="./product.html?id=42">
+      <article>
+        <img src="${product.imageUrl}" alt="${product.altTxt}">
+        <h3 class="productName"> ${product.name}</h3>
+        <p class="productDescription">${product.description}</p>
+      </article>
+    </a>`
+
+  }) 
+
 })
-  .then(function (data) { 
+
+ // retour d'un code d'erreur dans la console en cas de problème lors du fetch
+.catch (error => { 
+  alert(`Service momentanément indisponible. veuillez réessayer plus tard.`);
+  console.log (error);
 
 })
+      
 }
-getArticles()
+
+getArticles ()
+
