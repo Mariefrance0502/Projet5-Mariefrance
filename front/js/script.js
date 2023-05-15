@@ -11,12 +11,12 @@ const products = document.getElementById("items");
 
   }) 
 
-  .then (function (data) { 
+  .then (function (data) {
+    console.log (data); 
     data.forEach (product =>  { 
-      console.log (data); 
  //les photos et infos des canapés sont insérées dynamiquement dans l'HTML de la page d'accueil  
  // Il nous manque le prix et l'Id et la console affiche plus d'élément que prévue 
-      products.innerHTML += `<a href="./product.html?id=42">
+      products.innerHTML += `<a href="./product.html?id=${product._id}">
       <article>
         <img src="${product.imageUrl}" alt="${product.altTxt}">
         <h3 class="productName"> ${product.name}</h3>
