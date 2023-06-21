@@ -9,7 +9,6 @@ const quantity = document.getElementById("quantity");
 
 
 // DECLARATION DES FONCTIONS 
-
 //Cette fonction permet de récupérer les informations du produit depuis l'API grâce à l'identifiant
 const getArticles = (url) => { 
     fetch(url)
@@ -30,38 +29,35 @@ const getArticles = (url) => {
       
 }
 
-const addProductToLocalStorage = (kanap) => {
+const aadProductToLocalStorage = (kanape) => {
+        const cartKey = "ProductCart"; 
 
-        //Initialisation du local storage, vérifier si les Local Storage est vide 
-        let addToLocalStorage = JSON.parse(localStorage.getItem("addToCart")); 
-
-
-        // Le Locale Storage est vide 
-        addToLocalStorage = []; 
-        addToLocalStorage.push(kanap); 
-        localStorage.setItem("addToCart", JSON.stringify(addToLocalStorage));
-        console.log(addToLocalStorage);
-
-        // Si le panier comporte déja au moins un produit 
-        // Verifier si le produit est la même couleur et le même id
-        if (addToLocalStorage !== "" ) {
-            let item = addToLocalStorage.find ((item) => item.id === kanap.id && item.color === kanap.color); 
-            console.log('###### item', item);
-            if (item) {
-                let newQuantity = item.quantity + kanapp.quantity; 
-                item.quantity = newQuantity; 
-                console.log('######  item ',newQuantity); 
-                localStorage.setItem("addToCart", JSON.stringify(addToLocalStorage));
-            }
-            else {
-                // Le produit selectionné n'est pas dans la panier ou dans le local storage 
-                addToLocalStorage.push(kanap); 
-                localStorage.setItem("addToCart", JSON.stringify(addToLocalStorage)); 
-            }
+        //recupère le contenue actuelle du local storage 
+        const cartFromLocalStorage = localStorage.getItem(cartKey);
+        let cart; 
+        
+        // Vérifier si le contenu est vide ou pas 
+        if (cartFromLocalStorage == null) {
+           cart = [];
         }
+        //  Sinon créer une constante dont la valeur est égale a JSON.parse à la valeur du tableau (local storage)
+        else {
+            cart = JSON.parse(cartFromLocalStorage);
+        }
+        console.log(cart); 
 
+        // Vérifier si le produit se trouve déja dans le local storage et additionner les quantités 
+        let item = cart.find ((item) => item.productId === kanape.productId && item.color === kanape.color); 
 
-
+        if (item === undefined){
+            cart.push(kanape);
+            localStorage.setItem(cartKey, JSON.stringify(cart)); 
+        }
+        else { 
+            let newQuantity = item.quantity + kanape.quantity;  
+            item.quantity = newQuantity;  
+            localStorage.setItem(cartKey, JSON.stringify(cart));
+        }
 }
 
 const addToCartError = () => {
@@ -80,11 +76,10 @@ const addToCartError = () => {
 
 }
 
+
 const addToCart = () => {
     const quantitySelected = parseInt (quantity.value); //  ParesInt = VALEUR ENTIER 
     const colorsSelected = colors.value; 
-
-
 
     if ( colorsSelected !== "" && quantitySelected> 0 &&  quantitySelected <= 100) { 
         // Préparation des données pour la panier + variable sous forme d'objet 
@@ -96,21 +91,23 @@ const addToCart = () => {
             color : colors.value
         }
      
-        addProductToLocalStorage(kanape);
+        aadProductToLocalStorage(kanape);
       
 
         alert("Le produit a bien été ajoutée au panier");
-  } 
-  else { 
+    } 
+    else { 
     addToCartError();
-  }  
+    }  
 }  
   
 
 // EXECUTION DES FONCTIONS
-
 // Fonction déclenchée au clic sur le bouton addtocart
 addToCartButton.addEventListener("click", addToCart); 
+
+
+
 
 // Fonction déclanchée à l'affichage de la page 
 getArticles(urlOneProduct);

@@ -1,22 +1,66 @@
-
-
-/* RECUPERER LES PRODUITS STOCKES DANS LE LOCALSTORAGE   //
-let addToLocalStorage = JSON.parse(localStorage.getItem('addToCart'));
+// DECLARATION DES VARIABLES 
+UrlCart = ("http://localhost:3000/api/products/ + id + order")
+console.log(UrlCart); 
+let addToLocalStorage  = JSON.parse(localStorage.getItem('ProductCart'));
 console.log(addToLocalStorage); 
+let cartAndFormContainer = document.getElementById("cartAndFormContainer");
+console.log(cartAndFormContainer);
 
-// AFFICHER LES PRODUITS DU PANIER
 
- // je sélectionne la partie html concernée par la modification
- let cartAndFormContainer = document.getElementById('cartAndFormContainer');
- console.log(cartAndFormContainer); 
+let products= [];   
+console.log(products); 
 
- // si le panier est vide : afficher 'le panier est vide'
-if(addToLocalStorage === null || addToLocalStorage == 0) {
-  document.querySelector("#cart__items").innerHTML =`
-  <div class="cart__empty">
+
+
+
+
+const addProductInCart = () => {
+    
+
+    // si le panier est vide : afficher 'le panier est vide'
+    if(addToLocalStorage === null || addToLocalStorage === 0) {
+        document.querySelector("#cart__items").innerHTML =`<div class="cart__empty">
     <h2>Votre panier est vide ! <br> Merci de sélectionner des produits depuis la page d'accueil</h2>
   </div>`;
+} else {
+  let itemCart = []; 
+  for (i = 0; i < addToLocalStorage.length; i++) {
+    products.push(addToLocalStorage[i].id);
+  
+    // le code suivant sera injecté à chaque tour de boucle
+    // selon la longueur des produits dans le local storage
+    document.getElementById("cartAndFormContainer").innerHTML + `<article class="cart__item" data-id="${addToLocalStorage[i].ProductId}" data-color="${addToLocalStorage.color}">
+      <div class="cart__item__img">
+        <img src="${addToLocalStorage[i].products.imageUrl}}" alt="${addToLocalStorage[i].alt}">
+      </div>
+      <div class="cart__item__content">
+        <div class="cart__item__content__titlePrice">
+          <h2>${addToLocalStorage[i].name}</h2>
+          <p>${addToLocalStorage[i].color}</p>
+  
+        </div>
+        <div class="cart__item__content__settings">
+          <div class="cart__item__content__settings__quantity">
+            <p>Qté : </p>
+            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${addToLocalStorage[i].quantity}">
+          </div>
+          <div class="cart__item__content__settings__delete">
+            <p class="deleteItem">Supprimer</p>
+          </div>
+        </div>
+      </div>
+    </article>
+      `;
+    }
 }
+ 
+
+
+
+}
+
+
+
 
 /*
 
@@ -89,20 +133,6 @@ function changeQtt() {
 
   // RECUPERER LES PRODUITS STOCKES DANS LE LOCALSTORAGE   //
 
-UrlCart = ("http://localhost:3000/api/products/ + id + order")
-console.log(UrlCart); 
-
-let addToLocalStorage  = JSON.parse(localStorage.getItem('addToCart'));
-console.log(addToLocalStorage); 
-
-
-
-// je sélectionne la partie html concernée par la modification
-let cartAndFormContainer = document.getElementById('cartAndFormContainer');
-console.log(cartAndFormContainer); 
-
-let products= [];   
-console.log(products); 
 
 
 /*
