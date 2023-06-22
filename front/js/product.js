@@ -8,7 +8,9 @@ const colors = document.getElementById("colors");
 const quantity = document.getElementById("quantity");
 
 
+
 // DECLARATION DES FONCTIONS 
+
 //Cette fonction permet de récupérer les informations du produit depuis l'API grâce à l'identifiant
 const getArticles = (url) => { 
     fetch(url)
@@ -29,7 +31,7 @@ const getArticles = (url) => {
       
 }
 
-const aadProductToLocalStorage = (kanape) => {
+const addProductToLocalStorage = (kanape) => {
         const cartKey = "ProductCart"; 
 
         //recupère le contenue actuelle du local storage 
@@ -80,6 +82,11 @@ const addToCartError = () => {
 const addToCart = () => {
     const quantitySelected = parseInt (quantity.value); //  ParesInt = VALEUR ENTIER 
     const colorsSelected = colors.value; 
+    const imageSelected = document.querySelector(".item__img > img").src; 
+    const descriptionSelected = document.getElementById("description").innerHTML; 
+    const nameSelected = document.getElementById("title").innerHTML; 
+    const priceSelected = document.getElementById("price").innerHTML; 
+    console.log(imageSelected); 
 
     if ( colorsSelected !== "" && quantitySelected> 0 &&  quantitySelected <= 100) { 
         // Préparation des données pour la panier + variable sous forme d'objet 
@@ -88,10 +95,16 @@ const addToCart = () => {
         {
             productId : id,
             quantity : quantitySelected,
-            color : colors.value
+            color : colorsSelected,
+            image : imageSelected, 
+            description : descriptionSelected,
+            alt : descriptionSelected,
+            name : nameSelected,
+            price : priceSelected
         }
+
      
-        aadProductToLocalStorage(kanape);
+        addProductToLocalStorage(kanape);
       
 
         alert("Le produit a bien été ajoutée au panier");
@@ -103,6 +116,7 @@ const addToCart = () => {
   
 
 // EXECUTION DES FONCTIONS
+
 // Fonction déclenchée au clic sur le bouton addtocart
 addToCartButton.addEventListener("click", addToCart); 
 
