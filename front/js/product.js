@@ -2,6 +2,7 @@
 console.log ("Je travail sur le projet 5");
 const searchParams = new URL(window.location).searchParams;
 const id = searchParams.get('id');
+console.log(id); 
 const urlOneProduct = `http://localhost:3000/api/products/${id}`; 
 const addToCartButton = document.getElementById("addToCart");
 const colors = document.getElementById("colors");
@@ -60,6 +61,8 @@ const addProductToLocalStorage = (kanape) => {
             item.quantity = newQuantity;  
             localStorage.setItem(cartKey, JSON.stringify(cart));
         }
+
+        window.location.href = "index.html";
 }
 
 const addToCartError = () => {
@@ -78,15 +81,13 @@ const addToCartError = () => {
 
 }
 
-
 const addToCart = () => {
     const quantitySelected = parseInt (quantity.value); //  ParesInt = VALEUR ENTIER 
     const colorsSelected = colors.value; 
     const imageSelected = document.querySelector(".item__img > img").src; 
     const descriptionSelected = document.getElementById("description").innerHTML; 
     const nameSelected = document.getElementById("title").innerHTML; 
-    const priceSelected = document.getElementById("price").innerHTML; 
-    console.log(imageSelected); 
+    const priceSelected = document.getElementById("price").innerHTML; ; 
 
     if ( colorsSelected !== "" && quantitySelected> 0 &&  quantitySelected <= 100) { 
         // Préparation des données pour la panier + variable sous forme d'objet 
