@@ -296,12 +296,6 @@ btnSubmit.addEventListener("click", (e) => {
 
 
 
-
-
-
-
-
-
 /******************************* EXECUTION DES FONCTIONS  *******************/
 
 displayCartProducts(cartFromLocalStorage); 
