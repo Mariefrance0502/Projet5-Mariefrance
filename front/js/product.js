@@ -1,37 +1,38 @@
-// DECLARATION DES VARIABLES
-console.log ("Je travail sur le projet 5");
+
+/******************************* DECLARATION DES VARIABLES  *******************/
 const searchParams = new URL(window.location).searchParams;
 const id = searchParams.get('id');
-console.log(id); 
-const urlOneProduct = `http://localhost:3000/api/products/${id}`; 
-const addToCartButton = document.getElementById("addToCart");
-const colors = document.getElementById("colors");
-const quantity = document.getElementById("quantity");
+const urlOneProduct = `http://localhost:3000/api/products/${id}`;
+let addToCartButton = document.getElementById("addToCart");
+let colors = document.getElementById("colors");
+let quantity = document.getElementById("quantity");
 
 
 
-// DECLARATION DES FONCTIONS 
 
+
+/******************************* DECLARATION DES FONCTIONS  *******************/
 //Cette fonction permet de récupérer les informations du produit depuis l'API grâce à l'identifiant
-const getArticles = (url) => { 
+const getArticles = (url) => {
     fetch(url)
-    .then (function (res) { 
+    .then (function (res) {
         return res.json ()
     })
     .then (function (data) {
         document.getElementById("title").innerHTML= data.name;
         document.getElementById("price").innerHTML = data.price;
-        document.getElementById("description").innerHTML = data.description; 
-        const img = document.createElement("img"); 
-        document.querySelector(".item__img").appendChild(img); 
+        document.getElementById("description").innerHTML = data.description;
+        const img = document.createElement("img");
+        document.querySelector(".item__img").appendChild(img);
         img.setAttribute("src", `${data.imageUrl}`);
-        for (let color in data.colors) { 
+        for (let color in data.colors) {
             colors.innerHTML += `<option value="${data.colors[color]}">${data.colors[color]}</option>`;
         }
     })
-      
+     
 }
 
+//Cette fonction permet d'ajouter les produits dans le local storage
 const addProductToLocalStorage = (kanape) => {
         const cartKey = "ProductCart"; 
 
@@ -47,7 +48,6 @@ const addProductToLocalStorage = (kanape) => {
         else {
             cart = JSON.parse(cartFromLocalStorage);
         }
-        console.log(cart); 
 
         // Vérifier si le produit se trouve déja dans le local storage et additionner les quantités 
         let item = cart.find ((item) => item.productId === kanape.productId && item.color === kanape.color); 
@@ -61,37 +61,45 @@ const addProductToLocalStorage = (kanape) => {
             item.quantity = newQuantity;  
             localStorage.setItem(cartKey, JSON.stringify(cart));
         }
-
+        // Retour sur la page d'accueil 
         window.location.href = "index.html";
 }
 
+//Fonction erreur lorsque l'utilisateur ne renseigne pas tous les champs Obligatoire
 const addToCartError = () => {
-    const quantitySelected = parseInt (quantity.value); //  ParesInt = VALEUR ENTIER 
-    const colorsSelected = colors.value;
+    // Déclaration des variables 
+    let quantitySelected = parseInt (quantity.value); 
+    let colorsSelected = colors.value;
 
+    //Si la couleur et la quantité ne sont pas renseignés 
     if (colorsSelected === "" && quantitySelected === 0) {
         alert ("Veillez choisir une couleur et une quantitée");
     }
+    //Si la quantité n'est pas renseignée
     else if ( quantitySelected === 0) {
         alert ("Veillez choisir une quantitée correcte comprise entre 1 et 100"); 
     } 
+    //Si la couleur n'est pas renseignée
     else if (colorsSelected === "") {
       alert ("Veillez choisir une couleur");  
     }
 
 }
 
+//Cette fonction permet de récupérer les informations du produit depuis l'API grâce à son id 
 const addToCart = () => {
-    const quantitySelected = parseInt (quantity.value); //  ParesInt = VALEUR ENTIER 
-    const colorsSelected = colors.value; 
-    const imageSelected = document.querySelector(".item__img > img").src; 
-    const descriptionSelected = document.getElementById("description").innerHTML; 
-    const nameSelected = document.getElementById("title").innerHTML; 
-    const priceSelected = document.getElementById("price").innerHTML; ; 
+    // Déclaration des variables 
+    let quantitySelected = parseInt (quantity.value); 
+    let colorsSelected = colors.value; 
+    let imageSelected = document.querySelector(".item__img > img").src; 
+    let descriptionSelected = document.getElementById("description").innerHTML; 
+    let nameSelected = document.getElementById("title").innerHTML; 
+    let priceSelected = document.getElementById("price").innerHTML; ; 
 
+    //Si la couleur et la quantité sont renseignées 
     if ( colorsSelected !== "" && quantitySelected> 0 &&  quantitySelected <= 100) { 
-        // Préparation des données pour la panier + variable sous forme d'objet 
-        // display in local storage all the data we need to make an order //
+    
+        // création d'une variable sous forme d'objet lorsque l'utilisateur selectionne le produit a ajouter au panier 
         let kanape =
         {
             productId : id,
@@ -103,26 +111,23 @@ const addToCart = () => {
             name : nameSelected,
             price : priceSelected
         }
-
-     
+        //Le produit selectionné est ajouté au Local storage grâce a la fonction addProductToLocalStorage
         addProductToLocalStorage(kanape);
-      
-
         alert("Le produit a bien été ajoutée au panier");
     } 
+
+    //Sinon renvoie au message d'erreur grâce a la fonction addToCartError 
     else { 
     addToCartError();
     }  
 }  
   
 
-// EXECUTION DES FONCTIONS
 
+
+/******************************* EXECUTION DES FONCTIONS  *******************/
 // Fonction déclenchée au clic sur le bouton addtocart
 addToCartButton.addEventListener("click", addToCart); 
-
-
-
 
 // Fonction déclanchée à l'affichage de la page 
 getArticles(urlOneProduct);

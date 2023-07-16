@@ -1,51 +1,44 @@
 /******************************* DECLARATION DES VARIABLES  *******************/
 UrlCart = ("http://localhost:3000/api/products/ + id + order")
-console.log(UrlCart); 
-
-//-----------On déclare nos variables globales pour pouvoir calculer la quantité total d'articles et le prix total du panier----------------------
-
-
-// Recupérer mon contenue du local storage 
-let cartFromLocalStorage = JSON.parse(localStorage.getItem("ProductCart"));
+let cartFromLocalStorage = JSON.parse(localStorage.getItem("ProductCart")); //Récupérer mon contenue du local Storage 
 
 
 
+/******************************* DECLARATION DES FONCTIONS *******************/
 
-// DECLARATION DES FONCTIONS //
 
-
-/******************************* AFFICHER LES PRODUITS GRACE A LEUR ID DANS LE PANIER *******************/
+// Fonction qui permet d'ajouter les produits grâce a leur ID dans le panier 
 const displayCartProducts = (products => {     
   // expression initiale; condition; incrémentation
-  for (i = 0; i < products.length; i++) {
-    document.getElementById("cart__items").innerHTML += `<article class="cart__item" data-id="${products[i].productId}" data-color="${products[i].color}">
-  <div class="cart__item__img">
-    <img src="${products[i].image}" alt="${products[i].alt}">
-  </div>
-  <div class="cart__item__content">
-    <div class="cart__item__content__description">
-      <h2>${products[i].name}</h2>
-      <p>Couleur : ${products[i].color}</p>
-      <p>Price : ${products[i].price}€</p>
-    </div>
-    <div class="cart__item__content__settings">
-      <div class="cart__item__content__settings__quantity">
+    for (i = 0; i < products.length; i++) {
+        document.getElementById("cart__items").innerHTML += `<article class="cart__item" data-id="${products[i].productId}" data-color="${products[i].color}">
+         <div class="cart__item__img">
+        <img src="${products[i].image}" alt="${products[i].alt}">
+         </div>
+        <div class="cart__item__content">
+         <div class="cart__item__content__description">
+        <h2>${products[i].name}</h2>
+        <p>Couleur : ${products[i].color}</p>
+        <p>Price : ${products[i].price}€</p>
+        </div>
+        <div class="cart__item__content__settings">
+        <div class="cart__item__content__settings__quantity">
         <p>Qté : </p>
         <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${products[i].quantity}">
-      </div>
-      <div class="cart__item__content__settings__delete">
+        </div>
+        <div class="cart__item__content__settings__delete">
         <p class="deleteItem">Supprimer</p>
-      </div>
-    </div>
-  </div>
-</article>`
+        </div>
+        </div>
+        </div>
+        </article>`
       
-  }
+    }
 })
 
-/******************************* AFFICHER LA QUANTITE ET LE PRIX TOTAL DES ARTICLES *******************/
-
-const totalPriceQuantity = () => {     
+//Fonction qui permet d'afficher la quantité et le prix total des articles 
+const totalPriceQuantity = () => {   
+  //Déclaration des variables   
   let quantityTotalCalcul = 0;
   let priceTotalCalcul = 0;  
 
@@ -59,29 +52,29 @@ const totalPriceQuantity = () => {
       let priceProductInCart = cartFromLocalStorage[i].price * cartFromLocalStorage[i].quantity;
       priceTotalCalcul += priceProductInCart;
       
-  }
+    }
   
-  //Affichage des résultats grâce à innerHtml : 
+  //Affichage du résultat grâce à l'innerHtml : 
   document.querySelector('.cart__price').innerHTML = `<p>Total (<span id="totalQuantity">${quantityTotalCalcul}</span> articles) : <span id="totalPrice">${priceTotalCalcul}</span> €</p>`;
 }
  
-/******************************* SUPPRESSION PRODUIT DANS MON TABLEAU *******************/
-
+//Fonction qui permet de supprimer les produits de mon panier 
 const deleteProduct = () => {
 
   // Récupération boutons supprimer et transformation en tableau avec Array.from :
-
   let btn_supprimer = document.querySelectorAll(".deleteItem");
  
-  // Nouveau tableau pour récupérer le tableau localStorageProducts existant et contrôler les suppression :
+  // Déclaration d'une constante pour la création d'un nouveau tableau pour récupérer le tableau CartFormLocalStorage existant et contrôler les suppression :
   let tabDelete = [];
     for (let i = 0; i < btn_supprimer.length; i++) {
         // Écoute d'évènements au click sur le tableau des boutons supprimer
         btn_supprimer[i].addEventListener("click", () => {
 
+        //Déclaration des variables ID et Color des produits a supprimer     
         let deleteID = cartFromLocalStorage[i].productId;
         let deleteColor = cartFromLocalStorage[i].color;
 
+        //Utilisation de la fonction filter pour trouver le produit a supprimer 
         cartFromLocalStorage = cartFromLocalStorage.filter(produit => produit.productId !== deleteID || produit.color !== deleteColor); 
         localStorage.setItem("ProductCart",JSON.stringify(cartFromLocalStorage)); 
 
@@ -92,63 +85,61 @@ const deleteProduct = () => {
     }
 }
   
-/******************************* FONCTION POUR MODIFIER LA QUANTITE D'UN ARTICLE DEPUIS LE PANIER  *******************/
-
+//Fonction pour modifier la quantité d'un article depuis le panier 
 const changeQuantity = () => {
 
   let inputQuantity = Array.from(document.querySelectorAll(".cart__item__content__settings__quantity input"));
   let valueQuantity = Array.from(document.querySelectorAll('.itemQuantity'));
   
   
-  //Boucle for en vas chercher tout les input dans lequelle on effectue un addEventListener pour changer la value des articles :
-      for (let i = 0; i < inputQuantity.length; i++) {
+  //Boucle for qui va  chercher tout les input dans lequelle on effectue un addEventListener pour changer la quantité des articles :
+        for (let i = 0; i < inputQuantity.length; i++) {
   
-          inputQuantity[i].addEventListener("change", () => {
+            inputQuantity[i].addEventListener("change", () => {
           
-          // Copie du tableau cartFromLocalStorage dans le tableau tabUpdate :
-          tabUpdate = cartFromLocalStorage;
+            // Copie du tableau cartFromLocalStorage dans le tableau tabUpdate :
+            tabUpdate = cartFromLocalStorage;
               
-          for (let i = 0; i < tabUpdate.length; i++) { 
+            for (let i = 0; i < tabUpdate.length; i++) { 
           
                   delete tabUpdate[i].productId; 
-          }
+            }
               
-          //On modifie la quantité d'un élément à chaque index [i] du tableau écouté :
-              tabUpdate[i].quantity = valueQuantity[i].value;
+            //On modifie la quantité d'un élément à chaque index [i] du tableau écouté :
+            tabUpdate[i].quantity = valueQuantity[i].value;
   
-          //Mise à jour du local storage :
-              localStorage.setItem("ProductCart", JSON.stringify(tabUpdate));
+            //Mise à jour du local storage :
+            localStorage.setItem("ProductCart", JSON.stringify(tabUpdate));
   
-          //Rafraîchissement de la page :
-              window.location.reload();
+            //Rafraîchissement de la page :
+            window.location.reload();
   
-              totalPriceQuantity();
-          });
-      }
+            //Mise a jour de la quantité et calcul des produits dans le panier grâce à la fonction totalPriceQuantity
+            totalPriceQuantity();
+
+            });
+        }
 }
-  
+
   
   
 //******************************* GESTION DU FORMULAIRE   *******************//
 
-
-//Sélectionner le bouton Valider
+//Déclaration de la variables "bouton Valider"
 const btnSubmit = document.querySelector("#order")
-console.log(btnSubmit); 
-
 
 //Écouter le bouton Valider sur le click pour pouvoir contrôler, valider et ennoyer le formulaire et les produits au back-end
 btnSubmit.addEventListener("click", (e) => {
     e.preventDefault()
 
+    // Création d'une constante sous forme d'objet 
     let contactFormulaire = {
         firstName: document.getElementById('firstName').value,
         lastName: document.getElementById('lastName').value,
         address: document.getElementById('address').value,
         city: document.getElementById('city').value,
         email: document.getElementById('email').value,
-      };
-      console.log(contactFormulaire);
+    };
      
     //***** Regex pour le contrôle des champs Prénom, Nom et Ville *****//
     //Méthode .test pour vérifier la correspondance
@@ -176,10 +167,12 @@ btnSubmit.addEventListener("click", (e) => {
         document.querySelector(`#${queryId}`).textContent=""
     }
 
+    //Effet visuel en cas d'erreur sur le formulaire 
     function colorErrorMsg (colorId) {
         document.querySelector(`#${colorId}`).style.border="3px solid red"
     }
 
+    //Effet visuel en cas de validité du formulaire 
     function greenNoError (colorId) {
         document.querySelector(`#${colorId}`).style.border="3px solid green"
     }
@@ -240,7 +233,7 @@ btnSubmit.addEventListener("click", (e) => {
         }
     }
 
-    //Operateur ternaire pour afficher "Veuillez bien remplir ce champ" dans le formulaire
+    //Opérateur ternaire pour afficher "Veuillez bien remplir ce champ" dans le formulaire
     firstNameControl() == true ? noErrorMsg("firstNameErrorMsg") : messageError("firstNameErrorMsg")
     lastNameControl() == true ? noErrorMsg("lastNameErrorMsg") : messageError("lastNameErrorMsg")
     addressControl() == true ? noErrorMsg("addressErrorMsg") : messageError("addressErrorMsg")
