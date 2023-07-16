@@ -55,12 +55,12 @@ const addProductToLocalStorage = (kanape) => {
         if (item === undefined){
             cart.push(kanape);
             localStorage.setItem(cartKey, JSON.stringify(cart)); 
+            alert('Le produit à bien été ajouté a votre panier')
         }
         else { 
             let newQuantity = item.quantity + kanape.quantity;  
             item.quantity = newQuantity;  
             const valeurPresente = newQuantity;
-            let max = 100 - valeurPresente; 
                 if (valeurPresente > 100) {
                     alert('Vous avez atteint la quantité maximal autorisée pour cet article dans votre panier');
                     // Redirection vers la page panier
@@ -132,8 +132,6 @@ const addToCart = () => {
     }  
 }  
    
-
-
 /******************************* EXECUTION DES FONCTIONS  *******************/
 // Fonction déclenchée au clic sur le bouton addtocart
 addToCartButton.addEventListener("click", addToCart); 
