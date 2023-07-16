@@ -70,6 +70,7 @@ const deleteProduct = () => {
         // Écoute d'évènements au click sur le tableau des boutons supprimer
         btn_supprimer[i].addEventListener("click", () => {
 
+
         //Déclaration des variables ID et Color des produits a supprimer     
         let deleteID = cartFromLocalStorage[i].productId;
         let deleteColor = cartFromLocalStorage[i].color;
@@ -78,6 +79,8 @@ const deleteProduct = () => {
         cartFromLocalStorage = cartFromLocalStorage.filter(produit => produit.productId !== deleteID || produit.color !== deleteColor); 
         localStorage.setItem("ProductCart",JSON.stringify(cartFromLocalStorage)); 
 
+        tabDelete = cartFromLocalStorage; 
+        
         // Rafraîchissement de la page
         window.location.reload();
 

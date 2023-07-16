@@ -59,10 +59,21 @@ const addProductToLocalStorage = (kanape) => {
         else { 
             let newQuantity = item.quantity + kanape.quantity;  
             item.quantity = newQuantity;  
-            localStorage.setItem(cartKey, JSON.stringify(cart));
-        }
-        // Retour sur la page d'accueil 
-        window.location.href = "index.html";
+            const valeurPresente = newQuantity;
+            let max = 100 - valeurPresente; 
+                if (valeurPresente > 100) {
+                    alert('Vous avez atteint la quantité maximal autorisée pour cet article dans votre panier');
+                    // Redirection vers la page panier
+                    window.location.href = "cart.html";
+                } 
+                else {
+                    alert(`${kanape.quantity} article(s) ont été ajoutés au panier, vous avez un total de ${valeurPresente} de cet article dans votre panier.`)
+                    localStorage.setItem(cartKey,JSON.stringify(cart))
+                    // Retour sur la page d'accueil 
+                    window.location.href = "index.html";
+                }
+          
+        }       
 }
 
 //Fonction erreur lorsque l'utilisateur ne renseigne pas tous les champs Obligatoire
@@ -113,7 +124,6 @@ const addToCart = () => {
         }
         //Le produit selectionné est ajouté au Local storage grâce a la fonction addProductToLocalStorage
         addProductToLocalStorage(kanape);
-        alert("Le produit a bien été ajoutée au panier");
     } 
 
     //Sinon renvoie au message d'erreur grâce a la fonction addToCartError 
@@ -121,8 +131,7 @@ const addToCart = () => {
     addToCartError();
     }  
 }  
-  
-
+   
 
 
 /******************************* EXECUTION DES FONCTIONS  *******************/
