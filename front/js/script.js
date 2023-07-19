@@ -1,5 +1,6 @@
 //DECLARATION DES VARIABLES 
 const url = "http://localhost:3000/api/products"
+console.log(url); 
 const products = document.getElementById("items"); 
 
 

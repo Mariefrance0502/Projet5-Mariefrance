@@ -1,59 +1,83 @@
 /******************************* DECLARATION DES VARIABLES  *******************/
-UrlCart = ("http://localhost:3000/api/products/ + id + order")
+UrlCart = ("http://localhost:3000/api/products/ + id + order")  
+console.log(UrlCart); 
 let cartFromLocalStorage = JSON.parse(localStorage.getItem("ProductCart")); //Récupérer mon contenue du local Storage
+
 
 
 
 /******************************* DECLARATION DES FONCTIONS *******************/
 
+const getOneProduct  = (productId) => {
+        return fetch(`http://localhost:3000/api/products/${productId}`)
+}
 
 // Fonction qui permet d'ajouter les produits grâce a leur ID dans le panier
 const displayCartProducts = (products => {    
   // expression initiale; condition; incrémentation
-    for (i = 0; i < products.length; i++) {
-        document.getElementById("cart__items").innerHTML += `<article class="cart__item" data-id="${products[i].productId}" data-color="${products[i].color}">
-         <div class="cart__item__img">
-        <img src="${products[i].image}" alt="${products[i].alt}">
-         </div>
-        <div class="cart__item__content">
-         <div class="cart__item__content__description">
-        <h2>${products[i].name}</h2>
-        <p>Couleur : ${products[i].color}</p>
-        <p>Price : ${products[i].price}€</p>
-        </div>
-        <div class="cart__item__content__settings">
-        <div class="cart__item__content__settings__quantity">
-        <p>Qté : </p>
-        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${products[i].quantity}">
-        </div>
-        <div class="cart__item__content__settings__delete">
-        <p class="deleteItem">Supprimer</p>
-        </div>
-        </div>
-        </div>
-        </article>`
-     
-    }
-})
-
-//Fonction qui permet d'afficher la quantité et le prix total des articles
-const totalPriceQuantity = () => {  
-  //Déclaration des variables  
+   
   let quantityTotalCalcul = 0;
   let priceTotalCalcul = 0;  
+  const productPromise = []; 
 
-  for (let i = 0; i < cartFromLocalStorage.length; i++) {
+  for (i = 0; i < products.length; i++) {  
 
-      //Déclaration de la variable quantityProductInCart dans laquelle ont vas chercher la quantity de tout les articles et que l'on met dans quantityTotalCalcul :
-      let quantityProductInCart = cartFromLocalStorage[i].quantity;
-      quantityTotalCalcul += parseInt(quantityProductInCart);
+        const productId = products[i].productId
+        const productFromStorage = products[i]; 
+        productPromise.push(getOneProduct(productId)
+            .then (function (res) {
+        return res.json ()
+        })
 
-      //Déclaration de la variable priceProductInCart dans laquelle ont vas chercher le price de chaque articles et que l'on met dans priceTotalCalcul :
-      let priceProductInCart = cartFromLocalStorage[i].price * cartFromLocalStorage[i].quantity;
-      priceTotalCalcul += priceProductInCart;
+        .then((productFromApi) => { 
+
+        //Déclaration de la variable quantityProductInCart dans laquelle ont vas chercher la quantity de tout les articles et que l'on met dans quantityTotalCalcul :
+         let quantityProductInCart = productFromStorage.quantity;
+         quantityTotalCalcul += parseInt(quantityProductInCart);
+
+        //Déclaration de la variable priceProductInCart dans laquelle ont vas chercher le price de chaque articles et que l'on met dans priceTotalCalcul :
+        let priceProductInCart = productFromApi.price * productFromStorage.quantity;
+        priceTotalCalcul += priceProductInCart;
+            
+
+            document.getElementById("cart__items").innerHTML += `<article class="cart__item" data-id="${productFromApi._id}" data-color="${productFromStorage.color}">
+            <div class="cart__item__img">
+           <img src="${productFromApi.imageUrl}" alt="${productFromApi.altTxt}">
+            </div>
+           <div class="cart__item__content">
+            <div class="cart__item__content__description">
+           <h2>${productFromApi.name}</h2>
+           <p>Couleur : ${productFromStorage.color}</p>
+           <p>Price : ${productFromApi.price}€</p>
+           </div>
+           <div class="cart__item__content__settings">
+           <div class="cart__item__content__settings__quantity">
+           <p>Qté : </p>
+           <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${productFromStorage.quantity}">
+           </div>
+           <div class="cart__item__content__settings__delete">
+           <p class="deleteItem">Supprimer</p>
+           </div>
+           </div>
+           </div>
+           </article>`
+
+
+
+        })); 
      
     }
+  Promise.all(productPromise)
+  .then(()=> {
+    totalPriceQuantity(quantityTotalCalcul,priceTotalCalcul); 
+  })
  
+})
+
+
+//Fonction qui permet d'afficher la quantité et le prix total des articles
+const totalPriceQuantity = (quantityTotalCalcul,priceTotalCalcul) => {   
+  
   //Affichage du résultat grâce à l'innerHtml :
   document.querySelector('.cart__price').innerHTML = `<p>Total (<span id="totalQuantity">${quantityTotalCalcul}</span> articles) : <span id="totalPrice">${priceTotalCalcul}</span> €</p>`;
 }
@@ -289,12 +313,8 @@ btnSubmit.addEventListener("click", (e) => {
 
 
 
-
-
-
 /******************************* EXECUTION DES FONCTIONS  *******************/
 
-displayCartProducts(cartFromLocalStorage);
+displayCartProducts(cartFromLocalStorage); 
 deleteProduct(cartFromLocalStorage);
-totalPriceQuantity(cartFromLocalStorage);
 changeQuantity(cartFromLocalStorage); 

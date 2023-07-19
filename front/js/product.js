@@ -8,9 +8,6 @@ let colors = document.getElementById("colors");
 let quantity = document.getElementById("quantity");
 
 
-
-
-
 /******************************* DECLARATION DES FONCTIONS  *******************/
 //Cette fonction permet de récupérer les informations du produit depuis l'API grâce à l'identifiant
 const getArticles = (url) => {
@@ -105,7 +102,6 @@ const addToCart = () => {
     let imageSelected = document.querySelector(".item__img > img").src; 
     let descriptionSelected = document.getElementById("description").innerHTML; 
     let nameSelected = document.getElementById("title").innerHTML; 
-    let priceSelected = document.getElementById("price").innerHTML; ; 
 
     //Si la couleur et la quantité sont renseignées 
     if ( colorsSelected !== "" && quantitySelected> 0 &&  quantitySelected <= 100) { 
@@ -120,7 +116,6 @@ const addToCart = () => {
             description : descriptionSelected,
             alt : descriptionSelected,
             name : nameSelected,
-            price : priceSelected
         }
         //Le produit selectionné est ajouté au Local storage grâce a la fonction addProductToLocalStorage
         addProductToLocalStorage(kanape);
