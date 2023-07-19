@@ -1,13 +1,12 @@
 /******************************* DECLARATION DES VARIABLES  *******************/
 UrlCart = ("http://localhost:3000/api/products/ + id + order")  
-console.log(UrlCart); 
 let cartFromLocalStorage = JSON.parse(localStorage.getItem("ProductCart")); //Récupérer mon contenue du local Storage
 
 
 
 
 /******************************* DECLARATION DES FONCTIONS *******************/
-
+// Cette fonction permet de recupérer les informations du produit depuis l'API
 const getOneProduct  = (productId) => {
         return fetch(`http://localhost:3000/api/products/${productId}`)
 }
